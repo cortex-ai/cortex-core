@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.application.exception;
+package com.aurorapixel.cortexai.common.exception;
 
 import org.springframework.http.HttpStatus;
 

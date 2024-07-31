@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.application.dto;
+package com.aurorapixel.cortexai.api.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

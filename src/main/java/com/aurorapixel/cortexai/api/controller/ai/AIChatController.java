@@ -2,7 +2,7 @@ package com.aurorapixel.cortexai.api.controller.ai;
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
 import com.aurorapixel.cortexai.api.response.R;
-import com.aurorapixel.cortexai.application.dto.ChatMessageDTO;
+import com.aurorapixel.cortexai.api.dto.ChatMessageDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;

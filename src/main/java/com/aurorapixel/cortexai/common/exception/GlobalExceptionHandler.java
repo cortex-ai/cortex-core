@@ -1,8 +1,7 @@
-package com.aurorapixel.cortexai.api.handler;
+package com.aurorapixel.cortexai.common.exception;
 
 
 import com.aurorapixel.cortexai.api.response.R;
-import com.aurorapixel.cortexai.application.exception.ServiceException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

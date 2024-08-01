@@ -73,6 +73,12 @@
             <version>5.8.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
         <!-- langchain4j 核心包 -->
         <dependency>
             <groupId>dev.langchain4j</groupId>

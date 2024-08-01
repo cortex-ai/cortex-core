@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.infrastructure.config.mybatis;
+package com.aurorapixel.cortexai.common.config.mybatis;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.aurorapixel.cortexai.domain.entity.BaseEntity;

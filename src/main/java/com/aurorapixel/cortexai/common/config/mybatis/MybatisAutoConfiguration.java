@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.infrastructure.config.mybatis;
+package com.aurorapixel.cortexai.common.config.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;

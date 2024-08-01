@@ -1,5 +1,6 @@
 package com.aurorapixel.cortexai.domain.repository.ai;
 
+import com.aurorapixel.cortexai.common.config.mybatis.BaseRepository;
 import com.aurorapixel.cortexai.domain.entity.ai.AIModelConfigEntity;
 
 import java.util.Optional;
@@ -8,7 +9,7 @@ import java.util.Optional;
  * 领域层（Domain）：包含领域模型和业务规则，定义实体、值对象、聚合、仓库接口等。
  * AI模型配置仓库接口
  */
-public interface AIModelConfigRepositoryInterface {
+public interface AIModelConfigRepository extends BaseRepository<AIModelConfigEntity> {
     /**
      * 根据用户ID和模型名称查找模型配置
      * @param userId  用户ID

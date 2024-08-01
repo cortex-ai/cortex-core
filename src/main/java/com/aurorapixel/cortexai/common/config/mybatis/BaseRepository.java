@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 基础Service-自定义扩展
  */
-public interface BaseRepositoryInterface<T> extends IService<T> {
+public interface BaseRepository<T> extends IService<T> {
     /**
      * 自定义分页
      */

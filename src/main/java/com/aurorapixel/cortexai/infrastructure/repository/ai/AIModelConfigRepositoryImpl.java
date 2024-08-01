@@ -1,13 +1,15 @@
 package com.aurorapixel.cortexai.infrastructure.repository.ai;
 
+import com.aurorapixel.cortexai.common.config.mybatis.BaseRepositoryImpl;
 import com.aurorapixel.cortexai.domain.entity.ai.AIModelConfigEntity;
-import com.aurorapixel.cortexai.domain.repository.ai.AIModelConfigRepositoryInterface;
+import com.aurorapixel.cortexai.domain.repository.ai.AIModelConfigRepository;
+import com.aurorapixel.cortexai.infrastructure.repository.ai.mapper.AIModelConfigMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public class AIModelConfigRepository implements AIModelConfigRepositoryInterface {
+public class AIModelConfigRepositoryImpl extends BaseRepositoryImpl<AIModelConfigMapper, AIModelConfigEntity> implements AIModelConfigRepository {
 
     /**
      * 根据用户ID和模型名称查找模型配置

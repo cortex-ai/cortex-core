@@ -1,34 +1,30 @@
 package com.aurorapixel.cortexai.api.controller.ai;
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
-import com.aurorapixel.cortexai.api.response.R;
 import com.aurorapixel.cortexai.api.dto.ChatMessageDTO;
+import com.aurorapixel.cortexai.application.service.AIService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * AI-chat应用
  */
 @CortexAIController("/ai/chat")
+@AllArgsConstructor
 public class AIChatController {
+    private AIService aiService;
+
     /**
-     * 测试接口
+     * stream方式发送消息
+     * @param chatMessageDTO 消息请求体
+     * @return SseEmitter
      */
-    @GetMapping("/test")
-    public R<String> sendMessage(@RequestParam @NotEmpty @NotBlank String name) {
-        return R.ok("Hello World: " + name);
-    }
-
-    @GetMapping("/test/{id}")
-    public R<String> sendMessage2(@PathVariable @Max(10) Long id) {
-        return R.ok("Hello World: " + id);
-    }
-
-    @PostMapping("/test")
-    public R<String> sendMessage3(@RequestBody @Valid ChatMessageDTO chatMessageDTO) {
-        return R.ok("Hello World");
+    @PostMapping("/stream")
+    public SseEmitter sendMessage3(@RequestBody @Valid ChatMessageDTO chatMessageDTO) {
+        SseEmitter sseEmitter = new SseEmitter();
+        aiService.streamChat(chatMessageDTO, sseEmitter);
+        return sseEmitter;
     }
 }

@@ -8,13 +8,21 @@ import com.aurorapixel.cortexai.common.utils.AuthUtil;
 import com.aurorapixel.cortexai.domain.entity.ai.AIModelConfigEntity;
 import com.aurorapixel.cortexai.domain.repository.ai.AIModelConfigRepository;
 import com.aurorapixel.cortexai.domain.repository.ai.AITokenUserRepository;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
+import dev.langchain4j.model.output.FinishReason;
+import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.output.TokenUsage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -127,7 +135,6 @@ public class AIProviderFactory {
                 );
         return modelConfig;
     }
-
 
 }
 

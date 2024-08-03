@@ -1,7 +1,7 @@
 package com.aurorapixel.cortexai.api.controller.ai;
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
-import com.aurorapixel.cortexai.api.dto.ChatMessageDTO;
+import com.aurorapixel.cortexai.api.dto.ai.AIChatMessageDTO;
 import com.aurorapixel.cortexai.application.service.AIChatService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,13 +18,13 @@ public class AIChatController {
 
     /**
      * stream方式发送消息
-     * @param chatMessageDTO 消息请求体
+     * @param AIChatMessageDTO 消息请求体
      * @return SseEmitter
      */
     @PostMapping("/stream")
-    public SseEmitter streamChat(@RequestBody @Valid ChatMessageDTO chatMessageDTO) {
+    public SseEmitter streamChat(@RequestBody @Valid AIChatMessageDTO AIChatMessageDTO) {
         SseEmitter sseEmitter = new SseEmitter();
-        aiChatService.streamChat(chatMessageDTO, sseEmitter);
+        aiChatService.streamChat(AIChatMessageDTO, sseEmitter);
         return sseEmitter;
     }
 }

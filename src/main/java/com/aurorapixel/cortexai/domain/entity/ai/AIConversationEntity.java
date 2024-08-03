@@ -2,6 +2,7 @@ package com.aurorapixel.cortexai.domain.entity.ai;
 
 
 import com.aurorapixel.cortexai.domain.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,8 @@ public class AIConversationEntity extends BaseEntity {
     /**
      * 会话id
      */
-    private String conversationId;
+    @TableField("conversation_uuid")
+    private String conversationUUID;
 
     /**
      * 会话总结

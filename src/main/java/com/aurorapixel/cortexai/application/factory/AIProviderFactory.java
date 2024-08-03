@@ -86,6 +86,13 @@ public class AIProviderFactory {
         return getOpenAIChatModel(ChatModelEnum.GPT_3_5.getModelName(), AIConstant.OPEN_AI_BASE_URL_CHAT_ANYWHERE, AIConstant.OPEN_KEY);
     }
 
+    /**
+     * 获取免费试用模型
+     */
+    public StreamingChatLanguageModel getFreeStreamingChatLanguageModel() {
+        return getStreamingOpenAIChatModel(ChatModelEnum.GPT_3_5.getModelName(), AIConstant.OPEN_AI_BASE_URL_CHAT_ANYWHERE, AIConstant.OPEN_KEY);
+    }
+
 
     /**
      * openai 模型

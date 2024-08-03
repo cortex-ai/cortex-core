@@ -22,7 +22,7 @@ public class AIConversationMessageEntity extends BaseEntity {
     /**
      * 角色[user,ai,system]
      */
-    private Integer roleType;
+    private String roleType;
 
     /**
      * 状态

@@ -1,11 +1,11 @@
-package com.aurorapixel.cortexai.api.dto;
+package com.aurorapixel.cortexai.api.dto.ai;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ChatMessageDTO {
+public class AIChatMessageDTO {
     /**
      * 聊天内容
      */
@@ -21,7 +21,7 @@ public class ChatMessageDTO {
     /**
      * 会话ID
      */
-    private String conversationId;
+    private String conversationUUID;
 
     /**
      * 是否启用上下文

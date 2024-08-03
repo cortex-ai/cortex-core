@@ -25,9 +25,9 @@ public class DefaultInsertHandler implements MetaObjectHandler {
 //            if(ObjectUtil.isNull(baseEntity.getUpdateUser())&&ObjectUtil.isNotNull(user)){
 //                baseEntity.setUpdateUser(user.getUserId());
 //            }
-//            if(ObjectUtil.isNull(baseEntity.getDeleteFlag())){
-//                baseEntity.setDeleteFlag(0);
-//            }
+            if(ObjectUtil.isNull(baseEntity.getDeleteFlag())){
+                baseEntity.setDeleteFlag(0);
+            }
         }
     }
 

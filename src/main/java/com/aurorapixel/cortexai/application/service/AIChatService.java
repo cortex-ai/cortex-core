@@ -4,13 +4,16 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.aurorapixel.cortexai.api.dto.ChatMessageDTO;
 import com.aurorapixel.cortexai.application.factory.AIProviderFactory;
+import com.aurorapixel.cortexai.common.utils.AIUtil;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.StreamingResponseHandler;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.output.Response;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -20,8 +23,10 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
-public class AIService {
-    private AIProviderFactory aiProviderFactory;
+@Slf4j
+public class AIChatService {
+    private AIProviderFactory providerFactory;
+    private AIConversationService conversationService;
     /**
      * stream方式发送消息
      * @param chatMessageDTO 消息请求体
@@ -44,7 +49,7 @@ public class AIService {
         //3.保存用户问题 TODO
 
         //4.获取聊天模型
-        StreamingChatLanguageModel streamingChatLanguageModel = aiProviderFactory.getStreamingChatLanguageModel(chatMessageDTO.getModelName());
+        StreamingChatLanguageModel streamingChatLanguageModel = providerFactory.getStreamingChatLanguageModel(chatMessageDTO.getModelName());
 
         //5.发送消息
         chatMessages.add(new UserMessage(chatMessageDTO.getContent()));
@@ -69,5 +74,18 @@ public class AIService {
 
 
 
+    }
+
+
+    /**
+     * 获取会话概要
+     * @return 会话概要
+     */
+    public String getConversationSummary(String content) {
+        String promptTemplate = AIUtil.loadPrompt("prompt/ConversationSummaryPrompt.txt");
+        String prompt = promptTemplate.replace("{{input}}", content);
+        log.info("开始生成会话摘要:{}",content);
+        ChatLanguageModel freeChatLanguageModel = providerFactory.getFreeChatLanguageModel();
+        return freeChatLanguageModel.generate(prompt);
     }
 }

@@ -1,9 +1,10 @@
 package com.aurorapixel.cortexai.infrastructure.repository.ai;
 
+
 import com.aurorapixel.cortexai.common.config.mybatis.BaseRepositoryImpl;
 import com.aurorapixel.cortexai.domain.entity.ai.AIModelConfigEntity;
 import com.aurorapixel.cortexai.domain.repository.ai.AIModelConfigRepository;
-import com.aurorapixel.cortexai.infrastructure.repository.ai.mapper.AIModelConfigMapper;
+import com.aurorapixel.cortexai.infrastructure.mapper.AIModelConfigMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

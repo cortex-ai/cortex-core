@@ -1,0 +1,250 @@
+<Task>
+你是JAVA的DDD架构大师，根据我的需求帮我完成架构设计和代码编写。
+</Task>
+
+<directory>
+    ├─src
+    │  ├─main
+    │  │  ├─java
+    │  │  │  └─com
+    │  │  │      └─aurorapixel
+    │  │  │          └─cortexai
+    │  │  │              ├─annotation
+    │  │  │              ├─api
+    │  │  │              │  ├─controller
+    │  │  │              │  │  ├─ai
+    │  │  │              │  │  ├─auth
+    │  │  │              │  │  └─system
+    │  │  │              │  ├─dto
+    │  │  │              │  └─response
+    │  │  │              ├─application
+    │  │  │              │  ├─convert
+    │  │  │              │  ├─factory
+    │  │  │              │  └─service
+    │  │  │              ├─common
+    │  │  │              │  ├─config
+    │  │  │              │  │  ├─mybatis
+    │  │  │              │  │  └─redis
+    │  │  │              │  ├─constants
+    │  │  │              │  ├─enums
+    │  │  │              │  │  └─ai
+    │  │  │              │  ├─exception
+    │  │  │              │  └─utils
+    │  │  │              ├─domain
+    │  │  │              │  ├─entity
+    │  │  │              │  │  ├─ai
+    │  │  │              │  │  └─system
+    │  │  │              │  └─repository
+    │  │  │              │      ├─ai
+    │  │  │              │      └─system
+    │  │  │              └─infrastructure
+    │  │  │                  └─repository
+    │  │  │                      ├─ai
+    │  │  │                      │  └─mapper
+    │  │  │                      └─system
+<directory>
+
+<Instructions>
+1.请仔细参考我的目录结构，我的目录结构放在了<directory>内，如果过目录结构有问题，请给出调整建议。
+2.我使用的架构是springboot3.0,jdk17,mybatis-plus,mysql,redis,langchain4j。
+3.现在有 AIModelConfigRepository 和 AITokenUserRepository 在 domain.ai 的目录中。AIModelConfigRepositoryImpl 和 AITokenUserRepositoryImpl 在 repository.ai目录中。
+  - AIModelConfigRepository 主要提供用户和系统的大模型配置
+  - AITokenUserRepository 主要记录用户的不同大模型的token使用量
+3.我现在完成了factory中AIProviderFactory的class的编写,我会放在下面的<code>标签中:
+    <code>
+        @Component
+        @AllArgsConstructor
+        public class AIProviderFactory {
+            private final AIModelConfigRepository aiModelConfigRepository;
+            private final AITokenUserRepository aiTokenUSerRepository;
+
+
+            /**
+             * 用户选择模型
+             * @param modelName 模型名称
+             * @return 聊天模型
+             */
+            public ChatLanguageModel getChatLanguageModel(String modelName) {
+                AIModelConfigEntity modelConfig = getAiModelConfigEntity(modelName);
+                String apiKey = modelConfig.getApiKey();
+                String baseUrl = modelConfig.getBaseUrl();
+                if(StrUtil.isEmpty(apiKey)){
+                    throw new ServiceException("未设置模型ApiKey");
+                }
+                if(StrUtil.isEmpty(baseUrl)){
+                    throw new ServiceException("未设置模型BaseUrl");
+                }
+                ChatModelEnum chatModelEnum = ChatModelEnum.valueOf(modelName);
+                return switch (chatModelEnum) {
+                    case GPT_4O, GPT_3_5 -> getOpenAIChatModel(modelName, baseUrl, apiKey);
+                    default -> throw new ServiceException("不支持的模型类型");
+                };
+            }
+
+
+            /**
+             * 用户选择Streaming模型
+             * @param modelName 模型名称
+             * @return 聊天模型
+             */
+            public StreamingChatLanguageModel getStreamingChatLanguageModel(String modelName) {
+                AIModelConfigEntity modelConfig = getAiModelConfigEntity(modelName);
+                String apiKey = modelConfig.getApiKey();
+                String baseUrl = modelConfig.getBaseUrl();
+                if(StrUtil.isEmpty(apiKey)){
+                    throw new ServiceException("未设置模型ApiKey");
+                }
+                if(StrUtil.isEmpty(baseUrl)){
+                    throw new ServiceException("未设置模型BaseUrl");
+                }
+                ChatModelEnum chatModelEnum = ChatModelEnum.valueOf(modelName);
+                return switch (chatModelEnum) {
+                    case GPT_4O, GPT_3_5 -> getStreamingOpenAIChatModel(modelName, baseUrl, apiKey);
+                    default -> throw new ServiceException("不支持的模型类型");
+                };
+            }
+
+            /**
+             * 获取免费试用模型
+             * @return 免费试用模型
+             */
+            public ChatLanguageModel getFreeChatLanguageModel() {
+                return getOpenAIChatModel(ChatModelEnum.GPT_3_5.getModelName(), AIConstant.OPEN_AI_BASE_URL_CHAT_ANYWHERE, AIConstant.OPEN_KEY);
+            }
+
+
+            /**
+             * openai 模型
+             * @param modelName 模型名称
+             * @param baseUrl 模型地址
+             * @param apiKey 模型key
+             * @return 模型
+             */
+            private OpenAiChatModel getOpenAIChatModel(String modelName,String baseUrl,String apiKey) {
+                return OpenAiChatModel.builder().modelName(modelName).baseUrl(baseUrl).apiKey(apiKey).build();
+            }
+
+
+            /**
+             * openai 流式聊天模型
+             * @param modelName 模型名称
+             * @param baseUrl 模型地址
+             * @param apiKey 模型key
+             * @return 模型
+             */
+            private StreamingChatLanguageModel getStreamingOpenAIChatModel(String modelName,String baseUrl,String apiKey) {
+                return OpenAiStreamingChatModel.builder().modelName(modelName).baseUrl(baseUrl).apiKey(apiKey).build();
+            }
+
+
+            /**
+             * 获取模型配置
+             * @param modelName 模型名称
+             * @return 模型配置
+             */
+            private AIModelConfigEntity getAiModelConfigEntity(String modelName) {
+                if (StrUtil.isEmpty(modelName)) {
+                    throw new ServiceException("模型名称不允许为空");
+                }
+                //判断用户是否登录
+                if (Objects.isNull(AuthUtil.getUserId())) {
+                    throw new ServiceException("请先登录再使用!");
+                }
+                //获取模型配置
+                Optional<AIModelConfigEntity> modelConfigOptional = aiModelConfigRepository.findByUserIdAndModelName(AuthUtil.getUserId(), modelName);
+                AIModelConfigEntity modelConfig = modelConfigOptional.orElseGet
+                        (
+                                () -> aiModelConfigRepository.findSystemDefaultByModelName(modelName).orElseThrow
+                                        (
+                                                () -> new ServiceException("未找到模型配置")
+                                        )
+                        );
+                return modelConfig;
+            }
+
+
+        }
+    </code>
+5.StreamingChatLanguageModel ，ChatLanguageModel ，OpenAiChatModel 等等这些与AI底层相关的都是langchain4j提供的相关能力。
+6.StreamingChatLanguageModel 使用方法案例我会放在下面<stream_chat_languageModel_use>的标签中：
+    <stream_chat_languageModel_use>
+        public void TestStreamingChatLanguageModel(String modelName) {
+                StreamingChatLanguageModel streamingChatLanguageModel = getStreamingChatLanguageModel(modelName);
+                List<ChatMessage> chatMessages = new ArrayList<>();
+                //TODO chatMessages添加当前用户的输入，也可以添加用户与AI历史聊天记录
+                streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
+                    @Override
+                    public void onNext(String token) {
+                        //1.这里是异步逐返回每一个字，我们可以sse客户端，逐字返回给客户端，让客户实现打字效果。
+                    }
+
+                    @Override
+                    public void onError(Throwable error) {
+                        //2.这里是异步返回错误信息，让客户端知道是哪里出错了 我们可以做一些异常处理。
+                    }
+
+                    @Override
+                    public void onComplete(Response<AiMessage> response) {
+                        //这里是流式输出结束，可以做一些收尾工作
+                        //1.token使用记录器
+                        TokenUsage tokenUsage = response.tokenUsage();
+                        //1.1获取输入token
+                        Integer inputTokenCount = tokenUsage.inputTokenCount();
+                        //1.2获取输出token
+                        Integer outputTokenCount = tokenUsage.outputTokenCount();
+                        //2.整段输出内容
+                        AiMessage content = response.content();
+                        //2.1获取整段输出内容
+                        String text = content.text();
+
+                        //3.结束输出的理由参考下面枚举
+                        /**
+                         * The model call finished because the model decided the request was done.
+                         */
+                        //STOP,
+                        /**
+                         * The call finished because the token length was reached.
+                         */
+                        //LENGTH,
+
+                        /**
+                         * The call finished signalling a need for tool execution.
+                         */
+                        //TOOL_EXECUTION,
+
+                        /**
+                         * The call finished signalling a need for content filtering.
+                         */
+                        //CONTENT_FILTER,
+
+                        /**
+                         * The call finished for some other reason.
+                         */
+                        //OTHER
+                        FinishReason finishReason = response.finishReason();
+
+                    }
+                });
+            }
+    </stream_chat_languageModel_use>
+7.在回答问题之前请先思考，思考结束之后，并且一步一步来完成用户的问题，并且按照如下<example>标签内的格式要求进行输出
+    <example>
+        整个流程图:PUML格式
+
+        代码1：说明
+         - 目录：xxx.xxxx
+         - 代码：mad格式
+
+        代码2：说明
+         - 目录：xxx.xxxx
+         - 代码：mad格式
+    </example>
+</Instructions>
+
+请你根据上面描述，完成我的如下问题
+1.我需要写一个AI聊天接口，用sse方式进行返回
+2.聊天使用getStreamingChatLanguageModel拿到的StreamingChatLanguageModel进行实现
+3.自动保存用户的输入和AI的输出，用户的输入和AI的输出可以根据用户是否创建新的会话进行分组存入mysql中。
+4.自动记录用户的token使用情况，后面让根据用户token使用情况进行限制。
+5.我可以让用户自我选择是否启用聊天记录功能，如果启用在当前会话中拿到历史记录放入List<ChatMessage> chatMessages中，如过不启用chatMessages只存放用户输入，并且也是要保存聊天记录。
+6.请你根据现有的目录结构和ddd设计思想，完成我的设计问题。

@@ -20,7 +20,6 @@
 
     <properties>
         <java.version>17</java.version>
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <langchian.version>0.33.0</langchian.version>
     </properties>
 
@@ -42,8 +41,8 @@
         <!-- MyBatis-Plus Dependencies -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.7</version>
         </dependency>
 
         <!-- MySQL Driver -->

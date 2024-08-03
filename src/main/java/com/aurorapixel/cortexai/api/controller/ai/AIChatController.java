@@ -2,7 +2,7 @@ package com.aurorapixel.cortexai.api.controller.ai;
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
 import com.aurorapixel.cortexai.api.dto.ChatMessageDTO;
-import com.aurorapixel.cortexai.application.service.AIService;
+import com.aurorapixel.cortexai.application.service.AIChatService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @CortexAIController("/ai/chat")
 @AllArgsConstructor
 public class AIChatController {
-    private AIService aiService;
+    private AIChatService aiChatService;
 
     /**
      * stream方式发送消息
@@ -22,9 +22,9 @@ public class AIChatController {
      * @return SseEmitter
      */
     @PostMapping("/stream")
-    public SseEmitter sendMessage3(@RequestBody @Valid ChatMessageDTO chatMessageDTO) {
+    public SseEmitter streamChat(@RequestBody @Valid ChatMessageDTO chatMessageDTO) {
         SseEmitter sseEmitter = new SseEmitter();
-        aiService.streamChat(chatMessageDTO, sseEmitter);
+        aiChatService.streamChat(chatMessageDTO, sseEmitter);
         return sseEmitter;
     }
 }

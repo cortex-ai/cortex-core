@@ -50,6 +50,7 @@ public class AIService {
         chatMessages.add(new UserMessage(chatMessageDTO.getContent()));
         streamingChatLanguageModel.generate(chatMessages, new StreamingResponseHandler<AiMessage>() {
 
+
             @Override
             public void onNext(String token) {
 

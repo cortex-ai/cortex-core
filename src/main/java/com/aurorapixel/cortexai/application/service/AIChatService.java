@@ -66,8 +66,8 @@ public class AIChatService {
         conversationMessageService.addUserMessage(conversationId, content);
 
         //4.获取聊天模型
-        //StreamingChatLanguageModel streamingChatLanguageModel = providerFactory.getStreamingChatLanguageModel(AIChatMessageDTO.getModelName());
-        StreamingChatLanguageModel streamingChatLanguageModel = providerFactory.getFreeStreamingChatLanguageModel();
+        StreamingChatLanguageModel streamingChatLanguageModel = providerFactory.getStreamingChatLanguageModel(AIChatMessageDTO.getModelName());
+        //StreamingChatLanguageModel streamingChatLanguageModel = providerFactory.getFreeStreamingChatLanguageModel();
 
         //5.发送消息
         chatMessages.add(new UserMessage(content));

@@ -8,8 +8,23 @@ spring:
     url: jdbc:mysql://60.204.200.62:3306/cortex_ai?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
     password: wang8946
+  data:
+    redis:
+      ##redis 单机环境配置
+      host: auroralpixel.zapto.org
+      port: 6379
+      password: wang
+      database: 0
+      ssl: false
 
 # mybatis日志
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+cortex:
+  security:
+    # 密钥
+    secret: 123456
+    # 过期时间 (毫秒)
+    expiration: 86400000

@@ -7,7 +7,7 @@ public class AIConstant {
 
     public static final String OPEN_AI_BASE_URL_CHAT_ANYWHERE = "https://api.chatanywhere.tech";
 
-    public static final String OPEN_KEY = "";
+    public static final String OPEN_KEY = "sk-gRbZ9FJz2E7c7mwO5JOvp2u2rtoWoAbg12CxDy3Y25eLeDvd";
 
     public static final String CHAT = "chat";
 

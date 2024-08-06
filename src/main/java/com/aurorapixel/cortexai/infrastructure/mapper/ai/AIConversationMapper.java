@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.infrastructure.mapper;
+package com.aurorapixel.cortexai.infrastructure.mapper.ai;
 
 import com.aurorapixel.cortexai.domain.entity.ai.AIConversationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

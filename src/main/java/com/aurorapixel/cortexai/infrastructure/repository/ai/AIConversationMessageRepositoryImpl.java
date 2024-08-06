@@ -3,7 +3,7 @@ package com.aurorapixel.cortexai.infrastructure.repository.ai;
 import com.aurorapixel.cortexai.common.config.mybatis.BaseRepositoryImpl;
 import com.aurorapixel.cortexai.domain.entity.ai.AIConversationMessageEntity;
 import com.aurorapixel.cortexai.domain.repository.ai.AIConversationMessageRepository;
-import com.aurorapixel.cortexai.infrastructure.mapper.AIConversationMessageMapper;
+import com.aurorapixel.cortexai.infrastructure.mapper.ai.AIConversationMessageMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,9 @@
 package com.aurorapixel.cortexai.common.config.auth;
 
+import com.aurorapixel.cortexai.common.config.redis.RedisComponent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,8 @@ public class JwtToken {
     private String secret;
     @Value("${cortex.security.expiration}")
     private String expiration;
+    @Autowired
+    private RedisComponent redisComponent;
 
     public String generateToken(Object obj) {
 //        String token = Jwts.builder()

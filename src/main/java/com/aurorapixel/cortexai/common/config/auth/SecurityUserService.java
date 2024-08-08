@@ -1,7 +1,5 @@
 package com.aurorapixel.cortexai.common.config.auth;
 
-import cn.hutool.core.collection.ListUtil;
-import com.aurorapixel.cortexai.common.config.redis.RedisComponent;
 import com.aurorapixel.cortexai.common.exception.ServiceException;
 import com.aurorapixel.cortexai.domain.entity.system.SysUserEntity;
 import com.aurorapixel.cortexai.domain.repository.system.SysUserRepository;

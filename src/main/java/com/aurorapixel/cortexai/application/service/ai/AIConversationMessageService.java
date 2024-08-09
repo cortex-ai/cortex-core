@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.application.service;
+package com.aurorapixel.cortexai.application.service.ai;
 
 import com.aurorapixel.cortexai.application.convert.ai.AIConversationMessageConverter;
 import com.aurorapixel.cortexai.common.constants.AIConstant;

@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.application.service;
+package com.aurorapixel.cortexai.application.service.ai;
 
 import com.aurorapixel.cortexai.common.exception.ServiceException;
 import com.aurorapixel.cortexai.common.utils.AuthUtil;

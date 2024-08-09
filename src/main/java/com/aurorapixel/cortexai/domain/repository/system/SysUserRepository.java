@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface SysUserRepository extends BaseRepository<SysUserEntity> {
     Optional<SysUserEntity> findByAccount(String account);
+
+    Optional<SysUserEntity> findByEmail(String email);
 }

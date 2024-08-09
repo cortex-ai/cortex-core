@@ -3,10 +3,14 @@ package com.aurorapixel.cortexai.common.config.auth;
 import com.aurorapixel.cortexai.common.config.redis.RedisComponent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +18,13 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtToken {
-    @Value("${cortex.security.secret}")
-    private String secret;
+    @Getter
     @Value("${cortex.security.expiration}")
-    private String expiration;
+    private Long expiration;
     @Autowired
     private RedisComponent redisComponent;
+
+    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
 
     /**
@@ -51,12 +56,12 @@ public class JwtToken {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(expiration)))
-                .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secret)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SECRET_KEY)
                 .compact();
 
         //存储redis中
-        redisComponent.setExpire(subject, token, Long.parseLong(expiration), TimeUnit.MILLISECONDS);
+        redisComponent.setExpire(subject, token, expiration, TimeUnit.MILLISECONDS);
         return token;
     }
 
@@ -67,8 +72,9 @@ public class JwtToken {
      * @return 用户名
      */
     public String getUserNameFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secret)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
@@ -81,8 +87,9 @@ public class JwtToken {
      * @return 令牌
      */
     public Map<String,Object> getClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(secret)
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -103,8 +110,9 @@ public class JwtToken {
     }
 
     private boolean isTokenExpired(String token) {
-        Date expiration = Jwts.parser()
-                .setSigningKey(secret)
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();

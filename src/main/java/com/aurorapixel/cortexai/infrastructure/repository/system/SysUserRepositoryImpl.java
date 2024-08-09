@@ -14,6 +14,12 @@ public class SysUserRepositoryImpl extends BaseRepositoryImpl<SysUserMapper, Sys
     @Override
     public Optional<SysUserEntity> findByAccount(String account) {
         LambdaQueryWrapper<SysUserEntity> queryWrapper = new LambdaQueryWrapper<SysUserEntity>().eq(SysUserEntity::getAccount, account);
-        return Optional.of(this.getOne(queryWrapper));
+        return Optional.ofNullable(this.getOne(queryWrapper));
+    }
+
+    @Override
+    public Optional<SysUserEntity> findByEmail(String email) {
+        LambdaQueryWrapper<SysUserEntity> queryWrapper = new LambdaQueryWrapper<SysUserEntity>().eq(SysUserEntity::getEmail, email);
+        return Optional.ofNullable(this.getOne(queryWrapper));
     }
 }

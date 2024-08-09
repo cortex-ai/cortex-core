@@ -24,7 +24,5 @@ mybatis-plus:
 
 cortex:
   security:
-    # 密钥
-    secret: 123456
     # 过期时间 (毫秒)
     expiration: 86400000

@@ -1,4 +1,4 @@
-package com.aurorapixel.cortexai.application.service;
+package com.aurorapixel.cortexai.application.service.ai;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;

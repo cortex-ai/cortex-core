@@ -1,6 +1,6 @@
 package com.aurorapixel.cortexai.ai;
 
-import com.aurorapixel.cortexai.application.service.AIChatService;
+import com.aurorapixel.cortexai.application.service.ai.AIChatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -39,7 +39,19 @@ public class AuthService {
             throw new ServiceException(HttpStatus.UNAUTHORIZED.value(),"用户名或密码错误");
         }
         SecurityUserDetails securityUserDetails = authConverter.convertSecurityUserDetails(user);
-        String token = jwtToken.generateToken(securityUserDetails);
-        return new LoginResponse(token, null, jwtToken.getExpiration());
+        String accessToken = jwtToken.generateAccessToken(securityUserDetails);
+        String refreshToken = jwtToken.generateRefreshToken(securityUserDetails);
+        return new LoginResponse(accessToken, refreshToken, jwtToken.getExpiration());
+    }
+
+    public LoginResponse refreshToken(String refreshToken) {
+       if (!jwtToken.validateRefreshToken(refreshToken)) {
+           throw new ServiceException(HttpStatus.UNAUTHORIZED.value(),"令牌已过期");
+       }
+       String username = jwtToken.getUserNameFromToken(refreshToken);
+       SysUserEntity user = sysUserService.findUserByAccountAndEmail(username);
+       SecurityUserDetails securityUserDetails = authConverter.convertSecurityUserDetails(user);
+       String accessToken = jwtToken.generateAccessToken(securityUserDetails);
+       return new LoginResponse(accessToken, refreshToken, jwtToken.getExpiration());
     }
 }

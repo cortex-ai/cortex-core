@@ -1,6 +1,7 @@
 package com.aurorapixel.cortexai.common.config.auth;
 
 import cn.hutool.core.util.StrUtil;
+import com.aurorapixel.cortexai.common.exception.ServiceException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,15 +24,24 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private SecurityUserService securityUserService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws IOException, ServletException {
         String token = getJwtFromRequest(request);
-        if(StrUtil.isNotEmpty(token) && jwtToken.validateToken(token)){
-            String userName = jwtToken.getUserNameFromToken(token);
-            UserDetails userDetails = securityUserService.loadUserByUsername(userName);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                    null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (StrUtil.isNotEmpty(token) && jwtToken.validateAccessToken(token)) {
+                String userName = jwtToken.getUserNameFromToken(token);
+                UserDetails userDetails = securityUserService.loadUserByUsername(userName);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else {
+                throw new ServiceException("Invalid token");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+            return;
         }
         filterChain.doFilter(request, response);
     }

@@ -11,7 +11,7 @@ public class LoginResponse {
     /**
      * token
      */
-    private String token;
+    private String accessToken;
     /**
      * 刷新token
      */

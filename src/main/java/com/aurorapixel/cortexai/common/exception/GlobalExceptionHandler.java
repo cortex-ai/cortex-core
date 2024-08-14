@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestValueException;
@@ -30,6 +31,17 @@ public class GlobalExceptionHandler {
     public R<?> handleDefaultException(Exception ex) {
         ex.printStackTrace();
         return R.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统异常!");
+    }
+
+    /**
+     * 权限异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public R<?> handleAccessDeniedException(AccessDeniedException ex) {
+        ex.printStackTrace();
+        return R.fail(HttpStatus.FORBIDDEN.value(), "无访问权限");
     }
 
 

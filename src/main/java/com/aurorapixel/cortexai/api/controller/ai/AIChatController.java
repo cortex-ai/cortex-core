@@ -3,8 +3,10 @@ package com.aurorapixel.cortexai.api.controller.ai;
 import com.aurorapixel.cortexai.annotation.CortexAIController;
 import com.aurorapixel.cortexai.api.dto.ai.AIChatMessageDTO;
 import com.aurorapixel.cortexai.application.service.ai.AIChatService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

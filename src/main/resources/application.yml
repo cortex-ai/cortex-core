@@ -26,3 +26,4 @@ cortex:
   security:
     # 过期时间 (秒)
     expiration: 3600
+    secret: 3Q4/8Xbdk8IFJS9P1YJ85uRaUpLTGrJWqW0nmFPdyF6G76FweVJH/G8Gvl5DbK02Q4mNjyvJVOI8Xb9f1YzmdQ==

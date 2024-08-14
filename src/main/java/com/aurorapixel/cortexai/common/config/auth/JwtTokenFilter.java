@@ -22,26 +22,30 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private JwtToken jwtToken;
     @Autowired
     private SecurityUserService securityUserService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         String token = getJwtFromRequest(request);
-        try {
-            if (StrUtil.isNotEmpty(token) && jwtToken.validateAccessToken(token)) {
+        if (StrUtil.isNotEmpty(token)) {
+            try {
+
+                if (!jwtToken.validateAccessToken(token)) {
+                    throw new ServiceException("token已失效");
+                }
                 String userName = jwtToken.getUserNameFromToken(token);
                 UserDetails userDetails = securityUserService.loadUserByUsername(userName);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                         null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            }else {
-                throw new ServiceException("Invalid token");
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+                filterChain.doFilter(request, response);
+                return;
             }
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
-            return;
         }
         filterChain.doFilter(request, response);
     }

@@ -2,13 +2,16 @@ package com.aurorapixel.cortexai.api.controller.auth;
 
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
+import com.aurorapixel.cortexai.annotation.NoAuth;
 import com.aurorapixel.cortexai.api.dto.auth.LoginDTO;
 import com.aurorapixel.cortexai.api.response.R;
 import com.aurorapixel.cortexai.api.response.auth.LoginResponse;
 import com.aurorapixel.cortexai.application.service.auth.AuthService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @CortexAIController("/auth")
 @AllArgsConstructor
+@NoAuth
 public class AuthController {
     private final AuthService authService;
 

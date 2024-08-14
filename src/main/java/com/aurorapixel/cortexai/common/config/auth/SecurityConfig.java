@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig  {
@@ -20,14 +22,18 @@ public class SecurityConfig  {
     private JwtTokenFilter jwtTokenFilter;
     @Autowired
     private SecurityUserService securityUserService;
+    @Autowired
+    private NoAuthPathsProvider noAuthPathsProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        List<String> noAuthPaths = noAuthPathsProvider.getNoAuthPaths();
+
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**")
+                        .requestMatchers(noAuthPaths.toArray(new String[0]))
                         .permitAll()
                         .anyRequest().authenticated()
                 );

@@ -1,19 +1,35 @@
 package com.aurorapixel.cortexai.common.utils;
 
-import cn.hutool.core.util.StrUtil;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
+import com.aurorapixel.cortexai.common.config.auth.JwtToken;
+import com.aurorapixel.cortexai.common.config.auth.SecurityUserDetails;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Component
+@Slf4j
 public class AuthUtil {
-    private AuthUtil() {
-        throw new UnsupportedOperationException("这是一个工具类，不能实例化。");
+    private static JwtToken jwtToken;
+    @Autowired
+    public AuthUtil(JwtToken jwtToken){
+        AuthUtil.jwtToken = jwtToken;
     }
-    private static final String AUTHORIZATION = "Authorization";
+
 
     /**
      * 获取用户id
      */
     public static Long getUserId() {
+        SecurityUserDetails user = getUser();
+        if(Objects.nonNull(user)){
+            return user.getUserId();
+        }
         return null;
     }
 
@@ -22,38 +38,39 @@ public class AuthUtil {
         return -1L;
     }
 
+    public static SecurityUserDetails getUser(){
+        Map<String, Object> claims = getClaims();
+        if(Objects.isNull(claims)){
+            return null;
+        }
+        Object userIdObject = claims.get("userId");
+        Long userId = null;
+        if(userIdObject instanceof Long){
+            userId = (Long) userIdObject;
+        } else if (userIdObject instanceof Integer){
+            userId = ((Integer) userIdObject).longValue();
+        }
+
+        String account = (String) claims.get("account");
+        String name = (String) claims.get("name");
+        Integer sex = (Integer) claims.get("sex");
+        String email = (String) claims.get("email");
+        String phone = (String) claims.get("phone");
+        Integer status = (Integer) claims.get("status");
+
+        List<SimpleGrantedAuthority> roleUser = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return new SecurityUserDetails(userId,account,"",name,sex,email,phone,status,roleUser);
+    }
+
 
     /**
      * 获取Claims
      *
-     * @param request request
      * @return Claims
      */
-    public static Claims getClaims(HttpServletRequest request) {
-//        String token = request.getHeader(AUTHORIZATION);
-//        if (StrUtil.isEmpty(auth)) {
-//            return null;
-//        }
-//        Claims claims = null;
-//        String token = null;
-//        // 获取 请求头 参数
-//        if (StrUtil.isNotBlank(auth)) {
-//            token = JWTUtil.getToken(auth);
-//        }
-//        // 获取 Token 值
-//        if (StrUtil.isNotBlank(token)) {
-//            claims = JWTUtil.parseJWT(token);
-//        }
-//        // 判断 Token 状态
-//        if (claims != null) {
-//            String userIdStr = String.valueOf(claims.get(USER_ID));
-//            Long userId = Long.valueOf(userIdStr);
-//            String accessToken = JWTUtil.getAccessToken(userId, userType);
-//            if (!token.equals(accessToken)) {
-//                return null;
-//            }
-//        }
-//        return claims;
-        return null;
+    public static Map<String, Object> getClaims() {
+        String token = WebUtil.authorizationToken();
+        return jwtToken.getClaimsFromToken(token);
     }
 }

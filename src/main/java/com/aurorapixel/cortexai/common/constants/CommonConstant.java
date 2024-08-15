@@ -6,6 +6,8 @@ public class CommonConstant {
         throw new UnsupportedOperationException("这是一个常量类，不能实例化。");
     }
 
+    public static final String AUTHORIZATION = "Authorization";
+
     /**
      * 时间格式化标准
      */

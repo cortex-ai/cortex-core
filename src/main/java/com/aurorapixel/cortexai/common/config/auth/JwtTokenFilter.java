@@ -1,7 +1,9 @@
 package com.aurorapixel.cortexai.common.config.auth;
 
 import cn.hutool.core.util.StrUtil;
+import com.aurorapixel.cortexai.common.constants.CommonConstant;
 import com.aurorapixel.cortexai.common.exception.ServiceException;
+import com.aurorapixel.cortexai.common.utils.WebUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        String token = getJwtFromRequest(request);
+        String token = WebUtil.authorizationToken();
         if (StrUtil.isNotEmpty(token)) {
             try {
 
@@ -48,13 +50,5 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 }

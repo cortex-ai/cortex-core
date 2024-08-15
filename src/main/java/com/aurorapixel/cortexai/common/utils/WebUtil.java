@@ -6,8 +6,8 @@ import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.aurorapixel.cortexai.common.constants.CommonConstant;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-@Component
+
 public class WebUtil extends WebUtils {
 
     /**
@@ -33,12 +33,21 @@ public class WebUtil extends WebUtils {
         return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
+    public static String authorizationToken() {
+        HttpServletRequest request = getRequest();
+        String bearerToken = request.getHeader(CommonConstant.AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            bearerToken =bearerToken.substring(7);
+        }
+        return bearerToken;
+    }
+
     /**
      * 获取客户id和密钥
      *
      * @return 获取客户id和密钥
      */
-    public static String[] BasicAuthorization(){
+    public static String[] basicAuthorization(){
         HttpServletRequest request = getRequest();
         String clientId;
         String clientSecret;

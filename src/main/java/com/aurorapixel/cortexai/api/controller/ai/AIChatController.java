@@ -2,6 +2,7 @@ package com.aurorapixel.cortexai.api.controller.ai;
 
 import com.aurorapixel.cortexai.annotation.CortexAIController;
 import com.aurorapixel.cortexai.api.dto.ai.AIChatMessageDTO;
+import com.aurorapixel.cortexai.api.response.R;
 import com.aurorapixel.cortexai.application.service.ai.AIChatService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
